@@ -1,0 +1,262 @@
+.content {
+    width : 80%;
+    margin: 0 auto;
+/*     border-top: 4px solid #444; */
+}
+
+nav {
+    float: right;
+}
+
+nav ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+nav li {
+    display: inline-block;
+    margin-left: 90px;
+    padding-top: 40px;
+    font-size: x-large;
+    position: relative;
+}
+
+nav a {
+    color: #444;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+nav a:hover {
+    color: #000;
+}
+
+nav a::before {
+    content: '';
+    display: block;
+    height: 5px;
+    width: 0%;
+    background-color: #444;
+    position: absolute;
+    top: 0;
+
+    transition: all ease-in-out 250ms;
+}
+
+nav a:hover::before {
+    width: 100%;
+}
+
+.header {
+    background-color: rgb(223, 161, 28);
+}
+
+.header::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.headerEM {
+    background-color: rgb(223, 161, 28);
+}
+
+.logo {
+    float: left;
+    padding: 10px 0;
+}
+
+.headerTTT {
+    background-color: rgb(228, 185, 43);
+    padding: 20px;
+    width: 340px;   
+    margin: auto;
+    color: white;
+
+}
+
+.headerBTSH {
+    background-color: rgb(213, 219, 219);
+    padding: 10px;
+    width: 390px; 
+    margin: auto;
+}
+
+/*
+.headerWOF {
+    background-color: rgb(243, 35, 35);
+    padding: 10px;
+    width: 327px; 
+    margin: auto;
+}
+
+.headerEM {
+    background-color: grey;
+    padding :10px;
+    width: 235px;
+    margin: auto;
+}
+ .headerPA {
+    background-color: yellow;
+    padding: 10px;
+    width: 289px; 
+    margin: auto;
+} */
+
+.bodyBTSH {
+    margin-left :10px ;
+    background-image: url('/images/bckgBTSH2.jpg');
+    background-size: contain;
+    color: floralwhite;
+}
+
+.bodyTTT{
+    margin-left: 10px;
+    /*background-color: mediumspringgreen;*/
+    background-image: url('/images/TTTbckg5.jpg');
+    background-size: cover;
+    /* color: rgb(251, 255, 2); */
+}
+
+.bodyWOF {
+    margin-left :10px ;
+    background-image: url('/images/bckgWOF.jpg');
+    background-size: cover;
+    color: floralwhite;
+}
+
+.bodyEM {
+    margin-left :10px ;
+    background-image: url('/images/bckgEM.jpg');
+    background-size: cover;
+    color: brown;
+}
+
+.bodyPA {
+    margin-left :10px ;
+    background-image: url('/images/bckgPA.jpg');
+    background-size: cover;
+    color: yellow;
+}
+
+ul.navbar {
+    position: absolute;
+    top: 250px;
+    left: 0px;
+    width: 225px;
+}
+
+ul.navbar li {
+    margin: 5px 0;
+    padding: 7.5px;
+    border-right: 1px solid #17252a;
+    border-top: 1px solid #17252a;
+    border-left: 10px solid #17252a;
+    border-bottom: 1px solid #17252a;
+    list-style-type: none;
+}
+
+#linkBackTTT {
+    color: rgb(228, 185, 43);
+}
+
+#linkBackBTSH {
+    color: floralwhite;
+}
+
+#linkBackEM {
+    color: rgb(32, 52, 235);
+}
+
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 30%;
+}
+
+.textCenter {
+    text-align: center;
+}
+
+.contentIdx input {
+    font-family: inherit;
+    padding: .5em;
+    border: 2px solid var(--clr-bg);
+}
+
+.contentIdx form {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    grid-gap: 1em;
+    align-items: center;
+    position: relative;
+    margin-right: 200px;
+}
+
+label {
+    justify-self: center;
+}
+
+input[required]:placeholder-shown {
+    border-color: var(--clr-primary);
+}
+  
+  
+:root {
+    --clr-primary: #eeb752;
+    --clr-body: #333;
+    --clr-bg: #ddd;
+}
+
+.bodyIdx {
+    font-family: basic-sans, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.125em;
+    line-height: 1.6;
+    color: var(--clr-body);
+    background: var(--clr-bg);
+}
+
+.contentIdx {
+    background: white;
+    width: 40vw;
+    padding: 3em;
+    box-shadow: 0 0 3em rgba(0,0,0,.15);
+}
+
+.titleIdx  {
+    text-align: center;
+    margin: 0 0 40px;
+    font-weight: 900;
+    color: var(--clr-primary);
+    line-height: .8;
+}
+
+.btnIdx {
+    margin-left: 200px;
+    margin-top: 20px;
+    background-color: #eeb752; 
+    color: rgb(0, 0, 0);
+    text-align: center;
+    font-size: 18px;
+    width: 100%;
+}
+
+.subjects {
+    margin: 5px;
+    padding: 0;
+    list-style: none;
+    text-decoration: none;
+}
+
+footer {
+    background-color: #777;
+    padding: 10px;
+    text-align: center;
+    color: white;
+}
