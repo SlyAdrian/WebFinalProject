@@ -1,3 +1,13 @@
+
+<?php
+/* // Afficher un cookie
+echo $_COOKIE["Cookie"];
+ */
+// Afficher un cookie
+echo $_COOKIE["Cookie"];
+
+?>
+
 <html>
   <head>
     <link rel="stylesheet" type="text/css" href="styles.css">

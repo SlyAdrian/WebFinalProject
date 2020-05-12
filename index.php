@@ -1,3 +1,13 @@
+
+<?php
+	if(isset($_POST['name']) && isset($_POST['surname'])) {
+		$name = $_POST['name'];
+		$surname = $_POST['surname'];
+		$value = $name . ";" . $surname;
+		setcookie("Cookie", $value);
+	}
+?>
+
 <html>
 	<head>
 		<link rel="stylesheet" type="text/css" href="styles.css">
@@ -6,6 +16,20 @@
 	</head>
 
 	<?php
+		class MyDB extends SQLite3 {
+			function __construct() {
+				$this->open('sqlite.db');
+			}
+		}
+			
+		$db = new MyDB();
+		if(!$db) {
+		echo $db->lastErrorMsg();
+		exit();
+		} 
+
+		$numberSlots = 5;
+
 		$name = $surname = "";
 		if(isset($_POST['name']) && isset($_POST['surname'])) {
 			$name = $_POST['name'];
@@ -22,28 +46,77 @@
 				<input type = "text" id = "Name" name = "name" placeholder = "Please Enter your name" value="<?=$name?>" required>
 
 				<label for="Surname">Surname : </label>
-				<input type ="text" id = "Surname" name = "surname" placeholder = "Please Enter your surname" value="<?=$surname?>"required>
+				<input type ="text" id = "Surname" name = "surname" placeholder = "Please Enter your surname" value="<?=$surname?>" required>
 
 				<input type = "submit" class = "btnIdx" name = "submit1" value = "Submit">
 			</form>
 
 			<ul class = "subjects">
 				<li class = "subjects"><a href="TicTacToe.php">
-					S1 : Tic Tac Toe Game (x available team slots)
+					S1 : Tic Tac Toe Game (
+					<?php 
+						$sql = "SELECT COUNT(DISTINCT team) FROM students where subject == 1";
+						$ret = $db->query($sql);
+						while($row = $ret->fetchArray(SQLITE3_ASSOC) ) {
+							$res = $numberSlots - $row['COUNT(DISTINCT team)'];
+							echo "$res";	
+						}
+					?>
+					 available team slots )
 				</a></li>
 				<li class = "subjects"><a href="Battleship.php">
-					S2 : Battleship Game (x available team slots)
+					S2 : Battleship Game (
+					<?php 
+						$sql = "SELECT COUNT(DISTINCT team) FROM students where subject == 2";
+						$ret = $db->query($sql);
+						while($row = $ret->fetchArray(SQLITE3_ASSOC) ) {
+							$res = $numberSlots - $row['COUNT(DISTINCT team)'];
+							echo "$res";	
+						}
+					?>
+					 available team slots )
 				</a></li>
 				<li class = "subjects"><a href="WheelOfFortune.php">
-					S3 : Wheel Of Fortune Game (x available team slots)
+					S3 : Wheel Of Fortune Game (
+					<?php 
+						$sql = "SELECT COUNT(DISTINCT team) FROM students where subject == 3";
+						$ret = $db->query($sql);
+						while($row = $ret->fetchArray(SQLITE3_ASSOC) ) {
+							$res = $numberSlots - $row['COUNT(DISTINCT team)'];
+							echo "$res";	
+						}
+					?>
+					 available team slots )
 				</a></li>
 				<li class = "subjects"><a href="EfreiMessenger.php">
-					S4 : Efrei Messenger App (x available team slots)
+					S4 : Efrei Messenger App (
+					<?php 
+						$sql = "SELECT COUNT(DISTINCT team) FROM students where subject == 4";
+						$ret = $db->query($sql);
+						while($row = $ret->fetchArray(SQLITE3_ASSOC) ) {
+							$res = $numberSlots - $row['COUNT(DISTINCT team)'];
+							echo "$res";	
+						}
+					?>
+					 available team slots )
 				</a></li>
 				<li class = "subjects"><a href="ProjectsAssignment.php">
-					S5 : Projects Assignment App (x available team slots)
+					S5 : Projects Assignment App (
+					<?php 
+						$sql = "SELECT COUNT(DISTINCT team) FROM students where subject == 5";
+						$ret = $db->query($sql);
+						while($row = $ret->fetchArray(SQLITE3_ASSOC) ) {
+							$res = $numberSlots - $row['COUNT(DISTINCT team)'];
+							echo "$res";	
+						}
+					?>
+					 available team slots )
 				</a></li>							
 			</ul>
+			<?php 
+
+				$db->close();
+			?>
 		</div>
 
 <!-- 		<h1>Subjects Assignment App</h1>
@@ -55,13 +128,6 @@
 			<input type = "submit" name = "submit1" value = "Submit">
 		</form> -->
 
-		<?php
-			if(isset($_POST['submit1'])) {
-				if($name == "" || $surname == "") {
-					echo "You haven't filled correctly name and surname fields !";
-				} 
-			}
-		?>
 <!-- 		<div class="contentIdx">
 			<ul class = "subjects">
 				<li class = "subjects"><a href="TicTacToe.php">
