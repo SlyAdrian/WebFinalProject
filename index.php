@@ -3,6 +3,8 @@
 	if(isset($_POST['name']) && isset($_POST['surname'])) {
 		$name = $_POST['name'];
 		$surname = $_POST['surname'];
+		/* 		$name = strtoupper($_POST['name']);
+		$surname = strtoupper($_POST['surname']); */
 		$value = $name . ";" . $surname;
 		setcookie("Cookie", $value);
 	}

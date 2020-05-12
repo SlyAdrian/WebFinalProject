@@ -4,8 +4,37 @@
 echo $_COOKIE["Cookie"];
  */
 // Afficher un cookie
-echo $_COOKIE["Cookie"];
+if(isset($_COOKIE["Cookie"]))
+{
+  echo $_COOKIE["Cookie"];
+  $ns = explode(";", $_COOKIE["Cookie"]); 
+  $name = $ns[0];
+  $surname = $ns[1];
+}
 
+class MyDB extends SQLite3 {
+  function __construct() {
+    $this->open('sqlite.db');
+  }
+}
+  
+$db = new MyDB();
+if(!$db) {
+echo $db->lastErrorMsg();
+exit();
+} 
+
+// We check if the User logged has already a team and a subject.
+
+$sql = "SELECT * FROM students WHERE name = '$name' AND surname ='$surname'";
+$ret = $db->query($sql);
+$counterV = 0;
+
+while($row = $ret->fetchArray(SQLITE3_ASSOC)) {
+  $counterV++;
+}
+/* echo "<br>";
+echo $counterV; */
 ?>
 
 <html>
@@ -72,6 +101,46 @@ echo $_COOKIE["Cookie"];
       <p>7. Everything should be kept in database.</p>
       <p>8. In more advanced version you should use REST services with Vue.js on the frontend</p>
       </FONT>
+    </div>
+
+    <div>
+      <h2>Team that have already applied for this subject : </h3>
+        <?php 
+						$sql = "SELECT DISTINCT team FROM students where subject == 1";
+            $ret = $db->query($sql);
+            $arrayTeams = [];
+						while($row = $ret->fetchArray(SQLITE3_ASSOC) ) {
+/*               echo $row['team']; */
+              array_push($arrayTeams, $row['team']);
+/* 							$res = $numberSlots - $row['COUNT(DISTINCT team)'];
+							echo "$res";	 */
+            }
+            echo "<ul>";
+              foreach ($arrayTeams as $team) {
+                echo "<li>";
+                echo "<h3> Team $team </h3>";
+                $sql = "SELECT * FROM students where subject == 1 AND team == $team";
+                $ret = $db->query($sql);
+                $counter = 0;
+                while($row = $ret->fetchArray(SQLITE3_ASSOC) ) {
+                  echo $row['name'] . " " . $row['surname'] . "<br>" ;
+                  $counter++;
+                }
+                // If the number of team members is under 3 then you can join the team.
+                if($counter <3 && $counterV==0) {
+                  echo "<br>";
+                  echo "<form action='TicTacToe.php' method='POST'>
+                          <input type = 'submit' name = 'join' value = 'Join'>
+                        </form>";
+                }
+                echo "</li>";              
+              }
+            echo "</ul>";
+            
+            if($counterV > 0) {
+              echo "You could not join any project because you already have assigned for a project";
+            }
+				?>
     </div>
 
   </body>
