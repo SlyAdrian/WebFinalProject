@@ -92,7 +92,7 @@
         }
 
         if(isset($_POST['submition1'])) {
-            $counterTotalMembers++;
+/*             $counterTotalMembers++; */
             if(isset($_POST['name1']) && isset($_POST['surname1'])) {
                 $name1 = $_POST['name1'];
                 $surname1 = $_POST['surname1'];
@@ -125,7 +125,7 @@
         }
 
         if(isset($_POST['submition2'])) {
-            $counterTotalMembers++;
+/*             $counterTotalMembers++; */
             if(isset($_POST['name1']) && isset($_POST['surname1'])) {
                 $name1 = $_POST['name1'];
                 $surname1 = $_POST['surname1'];

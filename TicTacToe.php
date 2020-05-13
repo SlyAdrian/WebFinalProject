@@ -1,110 +1,110 @@
 
 <?php
-// Afficher un cookie
-/* echo $_COOKIE["Cookie"];
- */
-// Afficher un cookie
-class MyDB extends SQLite3 {
-  function __construct() {
-    $this->open('sqlite.db');
+  // Afficher un cookie
+  /* echo $_COOKIE["Cookie"];
+  */
+  // Afficher un cookie
+  class MyDB extends SQLite3 {
+    function __construct() {
+      $this->open('sqlite.db');
+    }
   }
-}
+    
+  $db = new MyDB();
+  if(!$db) {
+  echo $db->lastErrorMsg();
+  exit();
+  }
   
-$db = new MyDB();
-if(!$db) {
-echo $db->lastErrorMsg();
-exit();
-}
- 
-if(isset($_COOKIE["Cookie"]))
-{
-  echo $_COOKIE["Cookie"];
-  $ns = explode(";", $_COOKIE["Cookie"]); 
-  $name = $ns[0];
-  $surname = $ns[1];
+  if(isset($_COOKIE["Cookie"]))
+  {
+    echo $_COOKIE["Cookie"];
+    $ns = explode(";", $_COOKIE["Cookie"]); 
+    $name = $ns[0];
+    $surname = $ns[1];
 
-  // We check if the User logged has already a team and a subject.
-  $sql = "SELECT * FROM students WHERE name = '$name' AND surname ='$surname'";
+    // We check if the User logged has already a team and a subject.
+    $sql = "SELECT * FROM students WHERE name = '$name' AND surname ='$surname'";
+    $ret = $db->query($sql);
+    $counterV = 0;
+
+    while($row = $ret->fetchArray(SQLITE3_ASSOC)) {
+      $counterV++;
+    }
+
+    //If the name is already registered in the database, we check if it corresponds to this particular one.
+    if($counterV >0) {
+      $sql = "SELECT * FROM students WHERE name = '$name' AND surname ='$surname' AND subject = 1";
+      $ret = $db->query($sql);
+      $counterA = 0;
+
+      while($row = $ret->fetchArray(SQLITE3_ASSOC)) {
+        $counterA++;
+      }
+    }
+
+    if(isset($_POST['LeaveBtn']) && $counterA == 1){
+      $sql = "SELECT id FROM students WHERE name = '$name' AND surname = '$surname'";
+      $ret = $db->query($sql);
+      while($row = $ret->fetchArray(SQLITE3_ASSOC)) {
+        $id = $row['id'];
+      }
+  /*    echo "<br>";
+      echo $id; */
+      setcookie('id', $id, time()+60*60);
+      $sql = "DELETE FROM students WHERE name = '$name' AND surname = '$surname'";
+      $ret = $db->query($sql);
+    }
+
+    // We determine the number of members.
+    $counterTotalMembers = 0;
+    // if someone has recently been added we try to keep its id.
+    // So if he tries to apply again we keep the same id.
+    if(isset($_COOKIE['id'])) {
+      $counterTotalMembers = $_COOKIE['id'];
+      /* echo $_COOKIE['id']; */
+    } else {
+      $sql = "SELECT COUNT(*) FROM students";
+      $ret = $db->query($sql);
+      while($row = $ret->fetchArray(SQLITE3_ASSOC)) {
+        $counterTotalMembers = $row['COUNT(*)'] +1 ;
+      }
+    }
+
+    if(isset($_POST['ApplyBtn'])){
+      // Definition of the cookie as subject_number
+      $infoSent = "1" . ";" . "$name" . ";" . "$surname" . ";" . "$counterTotalMembers"; 
+      setcookie('subject', $infoSent);
+      // Redirection to form.php page
+      echo "<meta http-equiv='Refresh' content='0; url=form.php' />";
+    }
+  }
+
+  /* echo "<br>";
+  echo $counterV; */
+
+  // If the join button has been clicked, we add the member to the corresponding team.
+  if(isset($_POST['join']) && $counterV == 0) {
+    $teamNumber = $_POST['join'];
+    $arrayTeamNumber = [];
+    $arrayTeamNumber = explode('-',$teamNumber);
+    /* echo $counterTotalMembers; */
+    /* echo $arrayTeamNumber[1]; */
+    $sql = "INSERT INTO 'students' (id, name, surname, subject, team) VALUES ('$counterTotalMembers', '$name', '$surname', '1', '$arrayTeamNumber[1]')";
+    $ret = $db->query($sql);
+  }
+
+  // Recovery of different teams. 
+  $sql = "SELECT DISTINCT team FROM students where subject == 1";
   $ret = $db->query($sql);
-  $counterV = 0;
+  $arrayTeams = [];
 
-  while($row = $ret->fetchArray(SQLITE3_ASSOC)) {
-    $counterV++;
+  while($row = $ret->fetchArray(SQLITE3_ASSOC) ) {
+  /*               echo $row['team']; */
+    array_push($arrayTeams, $row['team']);
+  /* 							$res = $numberSlots - $row['COUNT(DISTINCT team)'];
+    echo "$res";	 */
   }
-
-  //If the name is already registered in the database, we check if it corresponds to this particular one.
-  if($counterV >0) {
-    $sql = "SELECT * FROM students WHERE name = '$name' AND surname ='$surname' AND subject = 1";
-    $ret = $db->query($sql);
-    $counterA = 0;
-
-    while($row = $ret->fetchArray(SQLITE3_ASSOC)) {
-      $counterA++;
-    }
-  }
-
-  if(isset($_POST['LeaveBtn']) && $counterA == 1){
-    $sql = "SELECT id FROM students WHERE name = '$name' AND surname = '$surname'";
-    $ret = $db->query($sql);
-    while($row = $ret->fetchArray(SQLITE3_ASSOC)) {
-      $id = $row['id'];
-    }
- /*    echo "<br>";
-    echo $id; */
-    setcookie('id', $id, time()+60*60);
-    $sql = "DELETE FROM students WHERE name = '$name' AND surname = '$surname'";
-    $ret = $db->query($sql);
-  }
-
-  // We determine the number of members.
-  $counterTotalMembers = 0;
-  // if someone has recently been added we try to keep its id.
-  // So if he tries to apply again we keep the same id.
-  if(isset($_COOKIE['id'])) {
-    $counterTotalMembers = $_COOKIE['id'];
-    /* echo $_COOKIE['id']; */
-  } else {
-    $sql = "SELECT COUNT(*) FROM students";
-    $ret = $db->query($sql);
-    while($row = $ret->fetchArray(SQLITE3_ASSOC)) {
-      $counterTotalMembers = $row['COUNT(*)'] +1 ;
-    }
-  }
-
-  if(isset($_POST['ApplyBtn'])){
-    // Definition of the cookie as subject_number
-    $infoSent = "1" . ";" . "$name" . ";" . "$surname" . ";" . "$counterTotalMembers"; 
-    setcookie('subject', $infoSent);
-    // Redirection to form.php page
-    echo "<meta http-equiv='Refresh' content='0; url=form.php' />";
-  }
-}
-
-/* echo "<br>";
-echo $counterV; */
-
-// If the join button has been clicked, we add the member to the corresponding team.
-if(isset($_POST['join']) && $counterV == 0) {
-  $teamNumber = $_POST['join'];
-  $arrayTeamNumber = [];
-  $arrayTeamNumber = explode('-',$teamNumber);
-  /* echo $counterTotalMembers; */
-  /* echo $arrayTeamNumber[1]; */
-  $sql = "INSERT INTO 'students' (id, name, surname, subject, team) VALUES ('$counterTotalMembers', '$name', '$surname', '1', '$arrayTeamNumber[1]')";
-  $ret = $db->query($sql);
-}
-
-// Recovery of different teams. 
-$sql = "SELECT DISTINCT team FROM students where subject == 1";
-$ret = $db->query($sql);
-$arrayTeams = [];
-
-while($row = $ret->fetchArray(SQLITE3_ASSOC) ) {
-/*               echo $row['team']; */
-  array_push($arrayTeams, $row['team']);
-/* 							$res = $numberSlots - $row['COUNT(DISTINCT team)'];
-  echo "$res";	 */
-}
 ?>
 
 <html>
@@ -212,6 +212,5 @@ while($row = $ret->fetchArray(SQLITE3_ASSOC) ) {
             }
 				?>
     </div>
-
   </body>
 </html>
