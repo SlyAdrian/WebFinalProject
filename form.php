@@ -28,6 +28,8 @@
             while($row = $ret->fetchArray(SQLITE3_ASSOC)) {
               $counterTotalMembers = $row['COUNT(*)'] +1 ;
             }
+            echo "<br>";
+            echo "Counter of Total members at the begining : ";
             echo $counterTotalMembers;
 
             // Recovery of different teams. 
@@ -50,8 +52,8 @@
 
         if(isset($_POST['No'])) {
             $sql = "INSERT INTO 'students' (id, name, surname, subject, team) VALUES ('$counterTotalMembers', '$name', '$surname', '$subjectNumber', '$arrayTeamsDisposable[0]')";
-            $ret = $db->query($sql);
-            echo "<meta http-equiv='Refresh' content='0; url=index.php' />";
+            $ret = $db->query($sql); 
+             echo "<meta http-equiv='Refresh' content='0; url=index.php' />";
         }
 
         echo "<br>";
@@ -66,6 +68,7 @@
         if(isset($_POST['Yes'])) {
             $sql = "INSERT INTO 'students' (id, name, surname, subject, team) VALUES ('$counterTotalMembers', '$name', '$surname', '$subjectNumber', '$arrayTeamsDisposable[0]')";
             $ret = $db->query($sql);
+
             echo "<br>";
             echo "How many of them ?";
             echo "<br>";
@@ -92,7 +95,11 @@
         }
 
         if(isset($_POST['submition1'])) {
-/*             $counterTotalMembers++; */
+            $counterTotalMembers++;
+            echo "<br>";
+            echo "submition 1 entry : ";
+            echo $counterTotalMembers;
+
             if(isset($_POST['name1']) && isset($_POST['surname1'])) {
                 $name1 = $_POST['name1'];
                 $surname1 = $_POST['surname1'];
@@ -125,7 +132,9 @@
         }
 
         if(isset($_POST['submition2'])) {
-/*             $counterTotalMembers++; */
+            echo "<br>";
+            echo "submition 2 entry : ";
+            echo $counterTotalMembers;
             if(isset($_POST['name1']) && isset($_POST['surname1'])) {
                 $name1 = $_POST['name1'];
                 $surname1 = $_POST['surname1'];
@@ -137,6 +146,9 @@
                 
                 if(isset($_POST['name2']) && isset($_POST['surname2'])) {
                     $counterTotalMembers++;
+                    echo "<br>";
+                    echo "submition 2 post entry : ";
+                    echo $counterTotalMembers;
                     $name2 = $_POST['name2'];
                     $surname2 = $_POST['surname2'];
                     $team = $_POST['team'];
