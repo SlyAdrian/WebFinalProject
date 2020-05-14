@@ -18,7 +18,6 @@
   
   if(isset($_COOKIE["Cookie"]))
   {
-    echo $_COOKIE["Cookie"];
     $ns = explode(";", $_COOKIE["Cookie"]); 
     $name = $ns[0];
     $surname = $ns[1];
@@ -43,37 +42,45 @@
       }
     }
 
+    /////////////
     if(isset($_POST['LeaveBtn']) && $counterA == 1){
       $sql = "SELECT id FROM students WHERE name = '$name' AND surname = '$surname'";
       $ret = $db->query($sql);
       while($row = $ret->fetchArray(SQLITE3_ASSOC)) {
         $id = $row['id'];
       }
-  /*    echo "<br>";
-      echo $id; */
-      setcookie('id', $id, time()+60*60);
       $sql = "DELETE FROM students WHERE name = '$name' AND surname = '$surname'";
       $ret = $db->query($sql);
     }
 
     // We determine the number of members.
     $counterTotalMembers = 0;
-    // if someone has recently been added we try to keep its id.
-    // So if he tries to apply again we keep the same id.
-    if(isset($_COOKIE['id'])) {
-      $counterTotalMembers = $_COOKIE['id'];
-      /* echo $_COOKIE['id']; */
-    } else {
-      $sql = "SELECT COUNT(*) FROM students";
-      $ret = $db->query($sql);
-      while($row = $ret->fetchArray(SQLITE3_ASSOC)) {
-        $counterTotalMembers = $row['COUNT(*)'] +1 ;
-      }
+    $sql = "SELECT COUNT(*) FROM students";
+    $ret = $db->query($sql);
+    while($row = $ret->fetchArray(SQLITE3_ASSOC)) {
+      $counterTotalMembers = $row['COUNT(*)'] +1 ;
     }
+    // Recovery of different ids. 
+    $sql = "SELECT DISTINCT id FROM students";
+    $ret = $db->query($sql);
+    $allIds = [];
+
+    while($row = $ret->fetchArray(SQLITE3_ASSOC) ) {
+        array_push($allIds, $row['id']);
+    }
+
+    $arrayIdsDisposable = [];
+    for ($k=1; $k <=$counterTotalMembers; $k++) {
+        if(!in_array($k, $allIds)){
+            array_push($arrayIdsDisposable, $k);
+        }
+    }
+    array_push($arrayIdsDisposable, $counterTotalMembers);    
+    /////////////
 
     if(isset($_POST['ApplyBtn'])){
       // Definition of the cookie as subject_number
-      $infoSent = "1" . ";" . "$name" . ";" . "$surname" . ";" . "$counterTotalMembers"; 
+      $infoSent = "1" . ";" . "$name" . ";" . "$surname" . ";" . "$arrayIdsDisposable[0]"; 
       setcookie('subject', $infoSent);
       // Redirection to form.php page
       echo "<meta http-equiv='Refresh' content='0; url=form.php' />";
@@ -90,7 +97,7 @@
     $arrayTeamNumber = explode('-',$teamNumber);
     /* echo $counterTotalMembers; */
     /* echo $arrayTeamNumber[1]; */
-    $sql = "INSERT INTO 'students' (id, name, surname, subject, team) VALUES ('$counterTotalMembers', '$name', '$surname', '1', '$arrayTeamNumber[1]')";
+    $sql = "INSERT INTO 'students' (id, name, surname, subject, team) VALUES ('$arrayIdsDisposable[0]', '$name', '$surname', '1', '$arrayTeamNumber[1]')";
     $ret = $db->query($sql);
   }
 
@@ -115,6 +122,10 @@
   </head>
 
   <header class = "header">
+    <?php 
+      echo "Hello ";
+      echo "$name";
+    ?>
     <div class = content>
       <img src="/images/LogoTTT.jpg" width = 215px class = "logo">
       <nav>
